@@ -15,31 +15,13 @@ import EditCard from "./EditCard";
 import { UserIcon } from "./Icons";
 import { fakeData } from "../data";
 
-
 const Container = styled.div`
   position: relative;
   display: flex;
-  flex-direction: row;
   flex-wrap: nowrap;
   overflow-y: scroll;
   min-height: 100vh;
   padding: 50px 40px 30px;
-
-  &::after {
-    position: fixed;
-    content: "";
-    display: block;
-    width: 40px;
-    height: 100vh;
-    right: 0;
-    top: 0;
-    z-index: 10;
-    background: linear-gradient(
-      to left,
-      rgba(251, 253, 254, 1),
-      rgba(251, 253, 254, 0)
-    );
-  }
 `;
 
 const Header = styled.header`
@@ -71,16 +53,16 @@ export default class Board extends Component {
 
   members= [UserIcon, UserIcon, UserIcon];
 
-  componentWillMount = () => {
+  componentWillMount() {
     this.setState({ data: this.getData() });
   };
 
-  getData = () => {
+  getData() {
     const localData = localStorage.getItem("board");
     return localData ? JSON.parse(localData) : fakeData;
   };
 
-  saveDataToLocalstorage = (data) => {
+  saveDataToLocalstorage(data) {
     if (typeof Storage !== "undefined") {
       localStorage.setItem("board", JSON.stringify(data));
     }
@@ -126,7 +108,7 @@ export default class Board extends Component {
   };
 
   addTask = (editListId) => {
-    this.setState({ editListId }, () => {
+    this.setState({ editListId, editCardId:"",editData:null }, () => {
       this.toggleModal();
     });
   };
@@ -153,13 +135,16 @@ export default class Board extends Component {
     const listIndex = getListIndex(data, editListId);
     const cardIndex = getCardIndex(data[listIndex].items, editCardId);
 
+    // checking if it's a new card
     if (isPositiveNumber(listIndex) && !isPositiveNumber(cardIndex)) {
       data[listIndex].items.push({
         ...task,
         id: randomId(),
         lastUpdated: new Date().toString(),
       });
-    } else if (isPositiveNumber(listIndex) && isPositiveNumber(cardIndex)) {
+    }
+    // if editing the already existing card 
+    else if (isPositiveNumber(listIndex) && isPositiveNumber(cardIndex)) {
       if(previousStatus!== task.status) {
         let find;
         switch(previousStatus) {
@@ -208,7 +193,7 @@ export default class Board extends Component {
     const { data, showModal, editData, editListId, editCardId } = this.state;
     const iconStyle = {};
     iconStyle['color'] = "#000000";
-    if (data.length > 0) {
+    if (data && data.length > 0) {
       return (
         <Fragment>
           <Header>
@@ -233,7 +218,7 @@ export default class Board extends Component {
             <Container>
               {data.map(list => (
                 <Droppable key={list.id} droppableId={list.id}>
-                  {(provided, snapshot) => (
+                  {(provided) => (
                     <div ref={provided.innerRef}>
                       <List
                         data={list}

@@ -52,7 +52,7 @@ const List = ({ data, addTask, editTask }) => {
     <Container>
       <Header>
         <Title>{title}</Title>
-        <Count>{items.length} {items.length === 1 ? "task" : "tasks"} </Count>
+        <Count>{items.length > 0 && items.length} {!items.length ? "" :  items.length === 1 ? "task" : "tasks"} </Count>
         <AddCard onClick={() => addTask(id)}>
           <IconAdd />
         </AddCard>

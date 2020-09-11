@@ -3,17 +3,17 @@ import React, { Component } from "react";
 import styled from "styled-components";
 
 const defaultInputStyle = `
-display: block;
-width: 100%;
-margin-top: 18px;
-height: 30px;
-padding: 0 8px;
-font-size: 13px;
-background: #ffffff;
-border: 1px solid #b1bbc4;
-border-radius: 2px;
-font-family: inherit;
-outline: none;
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  height: 30px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: #ffffff;
+  border: 1px solid #b1bbc4;
+  border-radius: 2px;
+  font-family: inherit;
+  outline: none;
 `;
 
 const Backlayer = styled.div`
@@ -95,13 +95,17 @@ const DateSelectBox = styled.div`
 `;
 
 export default class EditCard extends Component {
-  state = {
-    id: "",
-    taskData:"",
-    date:"",
-    status:"In List Started",
-    assignee: "Assignee List"
-  };
+  constructor() {
+    super();
+    this.state = {
+      id: "",
+      taskData:"",
+      date:"",
+      status:"In List Started",
+      assignee: "Assignee List"
+    };
+  }
+  
   previousStatus = null;
 
   componentWillMount = () => {
@@ -111,6 +115,7 @@ export default class EditCard extends Component {
 
   componentWillUnmount() {
     this.previousStatus = null;
+    // this.setState
   }
 
   handleInputChange = (event) => {
@@ -148,9 +153,9 @@ export default class EditCard extends Component {
                 onChange={this.handleInputChange}
               >
                 <Option value="In List Started" disabled hidden>In List Started</Option>
-                <Option value="Planned" hidden={(cardId || tasksData[0].id===listId) ? false: true}>Planned</Option>
-                <Option value="Started" hidden={(cardId || tasksData[1].id===listId) ? false: true}>Started</Option>
-                <Option value="Done" hidden={(cardId || tasksData[2].id===listId) ? false: true}>Done</Option>
+                <Option value="Planned" hidden={((cardId && tasksData[0].id!==listId) || (!cardId && tasksData[0].id===listId)) ? false: true}>Planned</Option>
+                <Option value="Started" hidden={((cardId && tasksData[1].id!==listId) || (!cardId && tasksData[1].id===listId)) ? false: true}>Started</Option>
+                <Option value="Done" hidden={((cardId && tasksData[2].id!==listId) || (!cardId && tasksData[2].id===listId)) ? false: true}>Done</Option>
               </Select>
 
               <Select
